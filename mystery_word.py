@@ -27,9 +27,10 @@ def set_difficulty_list():
     print(len(easy_list))
     print(len(medium_list))
     print(len(hard_list))
+    print(len(easy_list + medium_list + hard_list))
 
+# set_difficulty_list()
 set_difficulty_list()
-
 #let user choose a level of difficulty: easy, normal, or hard.
 # def difficulty_level():
 
