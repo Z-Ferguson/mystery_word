@@ -1,56 +1,55 @@
+import sys
 import random
 
-def organize_words():
+def read_file():
     with open("/usr/share/dict/words", "r") as f:
-        master_word_list = []
         for line in f:
-            master_word_list.append(line.strip())
-    return master_word_list
+            all_lines = f.read().lower()
+            list_words = all_lines.split()
+    return list_words
 
 #select word out of list
 #Setting easy list (4-6 characters), normal (6 - 8 characters), hard(8 letters or more)
-def set_difficulty_list(master_word_list):
+def organize_words(all_words):
     easy_list = []
     normal_list = []
     hard_list = []
-    diff_list = [easy_list, normal_list, hard_list]
-    # all_words = organize_words()
-    for word in master_word_list:
+    for word in all_words:
         if len(word) >= 4 and len(word) <= 6:
             easy_list.append(word)
         elif len(word) >=6 and len(word) <= 8:
             normal_list.append(word)
         elif len(word) > 8:
             hard_list.append(word)
-    return diff_list
+    return easy_list, normal_list, hard_list
+
+def get_random_word(user_diff_choice, easy, normal, hard):
+    random_word = ''
+    if user_diff_choice == 'e':
+        random_word = random.choice(easy)
+    elif user_diff_choice == 'n':
+        random_word = random.choice(normal)
+    elif user_diff_choice == 'h':
+        random_word = random.choice(hard)
+    return random_word
+
+def game_welcome():
+    print("Hello! Select a difficulty:")
+    print("easy (e), normal(n), or hard(h). ")
 
 #let user choose a level of difficulty: easy, normal, or hard.
 def difficulty_level():
-    # total_list = set_difficulty_list()
-    while True:
-        user_select = input("Select a difficulty, easy, normal, or hard ").lower()
-        if user_select == "easy":
-            return total_list[0]
-        # print(len(total_list[0]))
-        elif user_select == "normal":
-            return total_list[1]
-        # print(len(total_list[1]))
-        else:
-            user_select == "hard"
-            return total_list[2]
+    diff_select = input("> ").lower()
+    accepted_input = ["e", "n", "h"]
+    if diff_select not in accepted_input:
+        print("you must only enter 'e', 'n', or 'h'")
+        main()
+    return diff_select
 
 # Write a function to select a word at random from the word list.
-def random_word():
-    word_list = difficulty_level()
-    # print(random.choice(word_list))
-    return random.choice(word_list)
+
 
 #start of game will tell user how many letters the word contains
-def secret_word(word_list):
-    # the_secret_word = random_word()
-    print(word_list)
-    print("Your word has {} letters! ".format(len(the_secret_word)))
-    return secretWord
 
 #ask user to input one letter per round. upper or lowercase doesn't matter.
 #if more than one letter is input, tell user input is invalid and try again
@@ -58,32 +57,41 @@ def secret_word(word_list):
 #display the partially guessed word as well as letter not yet guessed.
 #display a word with blanks/letters filled in the appropriate spots.
 
-def word_draw(secretWord):
-
-    # secretWord = secret_word()
-    letter = " "
+def draw_word(right_guess, wrong_guess, secret_word):
     duplicate_letters = []
-    guess_input = input("Enter a letter for a guess! ").lower()
-
-    if letter in secretWord:
-        right_guess.append(letter)
-        return letter
-    else:
-        letter not in secretWord
-        wrong_guess.append(letter)
-        return letter
-
     # print(blanks)
-    for letter in secretWord: #replace blanks with correctly guessed letters
-        if guess_input in right_guess:
-            print(guess_input, end=' ')
-            duplicate_letters.append(guess_input)
+    for letter in secret_word: #replace blanks with correctly guessed letters
+        if letter in right_guess:
+            print(letter, end=' ')
+            duplicate_letters.append(letter)
         else:
             print("_ ", end=' ')
 
-    # for letter in secret_word:
-    #        letters_remaining = (len(secret_word) - len(duplicate_letters))
+    for letter in secret_word:
+        remaining_letters = (len(secret_word) - len(duplicate_letters))
+    if remaining_letters == 0:
+        win_condition()
+        game_reset()
 
+def win_condition():
+
+    print("\nThat's right! You win!")
+    game_reset()
+
+def loss_condition(secret_word):
+
+    print("\nYou ran out of guesses!")
+    print("The secret word was {}.".format(secret_word))
+    game_reset()
+
+def game_reset():
+    replay = input("Play again? (Yes(y)/No(n)) ").lower()
+    if replay[0] == 'n':
+        exit()
+    elif replay[0] == 'y':
+        main()
+    else:
+        exit()
 
 # # A user is allowed 8 guesses.
 # Remind the user of how many guesses they have left after each round.
@@ -100,15 +108,34 @@ def word_draw(secretWord):
 def main():
     right_guess = []
     wrong_guess = []
+    all_words = read_file()
+    letter_guess = ''
+    easy, normal, hard = organize_words(all_words)
+    game_welcome()
+    user_diff_choice = difficulty_level()
+    secret_word = get_random_word(user_diff_choice, easy, normal, hard)
+    print(secret_word)
+    while len(wrong_guess) <= 8:
+        print("\nNumber of guesses remaining {}\n".format(8 - len(wrong_guess)))
+        if len(wrong_guess) == 8:
+            lose_condition(secret_word)
+            game_reset()
+        draw_word(right_guess, wrong_guess, secret_word)
+        letter_guess = input("\nGuess a letter: ").lower()
+        if len(letter_guess) != 1 or not letter_guess.isalpha():
+            print("Please guess single letters only")
+        elif letter_guess == '':
+            print("You have to enter a letter.")
+        elif letter_guess in right_guess or letter_guess in wrong_guess:
+            print ("\nYou've already guessed that.")
+        elif letter_guess in secret_word:
+            print("\nGood job that letter is in the word!")
+            right_guess.append(letter_guess)
+        elif letter_guess not in secret_word:
+            print("\nThat letter is not in the word. Try again.")
+            wrong_guess.append(letter_guess)
 
-    master_word_list = organize_words()
-    diff_list = set_difficulty_list(master_word_list)
-    word_list = difficulty_level(master_word_list, diff_list)
-    total_list = random_word()
-    secretWord = secret_word(word_list)
-
-random_word()
 
 
-
-main()
+if __name__ == "__main__":
+    main()
