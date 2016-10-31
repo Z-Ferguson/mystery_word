@@ -1,4 +1,3 @@
-import sys
 import random
 
 def read_file():
@@ -48,8 +47,7 @@ def difficulty_level():
 
 def draw_word(right_guess, wrong_guess, secret_word):
     duplicate_letters = []
-    # print(blanks)
-    for letter in secret_word: #replace blanks with correctly guessed letters
+    for letter in secret_word:
         if letter in right_guess:
             print(letter, end=' ')
             duplicate_letters.append(letter)
