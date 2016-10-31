@@ -46,17 +46,6 @@ def difficulty_level():
         main()
     return diff_select
 
-# Write a function to select a word at random from the word list.
-
-
-#start of game will tell user how many letters the word contains
-
-#ask user to input one letter per round. upper or lowercase doesn't matter.
-#if more than one letter is input, tell user input is invalid and try again
-#let user know if their guess appears in the computers word.
-#display the partially guessed word as well as letter not yet guessed.
-#display a word with blanks/letters filled in the appropriate spots.
-
 def draw_word(right_guess, wrong_guess, secret_word):
     duplicate_letters = []
     # print(blanks)
@@ -93,18 +82,6 @@ def game_reset():
     else:
         exit()
 
-# # A user is allowed 8 guesses.
-# Remind the user of how many guesses they have left after each round.
-# A user loses a guess only when they guess incorrectly.
-# If they guess a letter that is in the computer's word, they do not lose a guess.
-# If the user guesses the same letter twice, print a message letting them know
-# they've already guessed that letter and ask them to try again.
-# #The game will end when the user constructs the full word or runs out of guesses.
-# If the player runs out of guesses, reveal the word to the user when the game ends.
-
-#When a game ends, ask the user if they want to play again.
-#Write a function to check if a word has been completely guessed.
-
 def main():
     right_guess = []
     wrong_guess = []
@@ -114,7 +91,6 @@ def main():
     game_welcome()
     user_diff_choice = difficulty_level()
     secret_word = get_random_word(user_diff_choice, easy, normal, hard)
-    print(secret_word)
     while len(wrong_guess) <= 8:
         print("\nNumber of guesses remaining {}\n".format(8 - len(wrong_guess)))
         if len(wrong_guess) == 8:
