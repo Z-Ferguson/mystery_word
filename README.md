@@ -13,7 +13,7 @@ This program will implement the game Mystery Word. In the game, you will be play
 - Let the user know if their guess appears in the computer's word.
 - Display the partially guessed word, as well as letters that have not been guessed.
 
-A user is allowed 8 guesses. 
+A user is allowed 8 guesses.
 
 Remind the user of how many guesses they have left after each round.
 
